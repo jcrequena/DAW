@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package DAW;
 
 /**
@@ -13,6 +9,16 @@ public class Proyecto {
     private String nombre;
     private String resumen;
     private String enlace;
+
+    public Proyecto() {
+    }
+
+    public Proyecto(int id, String nombre, String resumen, String enlace) {
+        this.id = id;
+        this.nombre = nombre;
+        this.resumen = resumen;
+        this.enlace = enlace;
+    }
 
     public int getId() {
         return id;

@@ -5,7 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<jsp:include page="../header.jsp" />
+<jsp:useBean id="proyecto" type="DAW.Proyecto" scope="request"/>
+<jsp:include page="../header.jsp?rp=../" />
 <h1>Nuevo Proyecto</h1>
 <form method="post">
     <label>Nombre: </label><input name="nombre" type="text" value="${proyecto.nombre}">${errNombre}<br/>
@@ -13,4 +14,4 @@
     <label>Enlace: </label><input name="enlace" type="text" ${proyecto.enlace}></label>${errEnlace}<br/>
     <input name="enviar" type="Submit" value="Guardar" />
 </form>
-<jsp:include page="../footer.jsp" />
+<jsp:include page="../footer.jsp?rp=../" />

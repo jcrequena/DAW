@@ -5,6 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String relativePath=request.getParameter("rp");
+%>
       <hr>
 
       <footer>
@@ -12,7 +15,7 @@
       </footer>
 
     </div> <!-- /container -->
-    <script type="application/javascript" src="js/jquery-1.8.1.min.js"></script>
-    <script type="application/javascript" src="js/bootstrap.min.js"></script>
+    <script type="application/javascript" src="<%= (relativePath!=null)?relativePath:"" %>js/jquery-1.8.1.min.js"></script>
+    <script type="application/javascript" src="<%= (relativePath!=null)?relativePath:"" %>js/bootstrap.min.js"></script>
   </body>
 </html>

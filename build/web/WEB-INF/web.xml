@@ -6,11 +6,9 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ProyectoControlador</servlet-name>
-        <url-pattern>/proyecto</url-pattern>
+        <url-pattern>/proyecto/*</url-pattern>
     </servlet-mapping>
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
 </web-app>

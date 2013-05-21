@@ -5,6 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String relativePath=request.getParameter("rp");
+%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,8 +19,8 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="<%= (relativePath!=null)?relativePath:"" %>css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%= (relativePath!=null)?relativePath:"" %>css/bootstrap-responsive.min.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -36,7 +39,7 @@
             <ul class="nav">
               <li class="active"><a href="#">Inicio</a></li>
               <li><a href="proyecto">Proyectos</a></li>
-              <li><a href="#contact">Usuarios</a></li>
+              <li><a href="usuario">Miembros</a></li>
             </ul>
             <form class="navbar-form pull-right">
               <input class="span2" name="email" type="text" placeholder="Email">

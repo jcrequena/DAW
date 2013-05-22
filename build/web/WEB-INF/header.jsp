@@ -59,7 +59,7 @@
               <li><a href="/DAW/usuario">Miembros</a></li>
             </ul>
 <%
-    Usuario currentUser=(Usuario)request.getAttribute("currentUsuario");
+    Usuario currentUser=(Usuario)session.getAttribute("currentUsuario");
     if(currentUser==null) currentUser=new Usuario(0,"","","","","","","");
     if(currentUser.getId()==0){
 %>
@@ -73,7 +73,7 @@
               <button type="submit" class="btn">Deconexión</button>
             </form>
             <ul class="nav pull-right">
-                <li><a href="usuario/ver?id=<%= currentUser.getId() %>"><%= currentUser.getEmail() %></a></li>
+                <li><a href="/DAW/usuario/ver?id=<%= currentUser.getId() %>"><%= currentUser.getEmail() %></a></li>
             </ul>
 <% } %>
           </div><!--/.nav-collapse -->

@@ -1,6 +1,7 @@
 package DAW;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -45,6 +46,7 @@ public class ProyectoControlador extends HttpServlet {
             int id=Integer.parseInt(request.getParameter("id"));
             Proyecto p = ProyectoDAO.buscarId(id);
             request.setAttribute("proyecto", p);
+            request.setAttribute("usuariosP", ProyectoDAO.getUsuarios(p));
             rd=request.getRequestDispatcher("/WEB-INF/proyecto/ver.jsp");
         }
         else if (action.equals("/suprimir")) {
@@ -83,7 +85,8 @@ public class ProyectoControlador extends HttpServlet {
                     p=new Proyecto();
                     if (validarProyecto(request,p)) { // validar y "cargar" bean con parámetros
                         ProyectoDAO.guardar(p); // Guardar cambios en modelo
-                        response.sendRedirect(srvUrl); // Volver al listado de proyectos
+                        ProyectoDAO.setUsuarios(p, getUsuarios(request));
+                        response.sendRedirect(srvUrl+"/ver?id="+p.getId()); // Volver al listado de proyectos
                         return;
                     }
                 }
@@ -93,8 +96,16 @@ public class ProyectoControlador extends HttpServlet {
                     p=ProyectoDAO.buscarId(id);
                 }
                 //Formulario de edición
-                request.setAttribute("proyecto", p);
-                rd=request.getRequestDispatcher("/WEB-INF/proyecto/editar.jsp");
+                if(p!=null){
+                    request.setAttribute("proyecto", p);
+                    request.setAttribute("usuarios", UsuarioDAO.buscarTodos());
+                    request.setAttribute("usuariosP", ProyectoDAO.getUsuarios(p));
+                    rd=request.getRequestDispatcher("/WEB-INF/proyecto/editar.jsp");
+                }
+                else {
+                    response.sendRedirect(srvUrl);
+                    return;
+                }
             }
             else {
                 response.sendRedirect(srvUrl);
@@ -138,7 +149,17 @@ public class ProyectoControlador extends HttpServlet {
             valido=false;
         }
         return valido;
-       }
+    }
+    private ArrayList<Integer> getUsuarios(HttpServletRequest request) {
+        ArrayList<Integer> lup = new ArrayList<Integer>();
+        String[] usuariosP = request.getParameterValues("usuarios");
+        for(String us: usuariosP) {
+            int ul=Integer.parseInt(Util.getParam(us,"0"));
+            if (ul!=0)
+                lup.add(ul);
+        }
+        return lup;
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

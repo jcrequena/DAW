@@ -165,4 +165,46 @@ class UsuarioDAO extends DAO {
         }
         return u;
     }
+    static List<Proyecto> getProyectos(Usuario u) {
+        List<Proyecto> lp=new ArrayList<Proyecto>();
+        if (openConexion()!=null) {
+            try {
+                String qry="SELECT p.id,p.nombre,p.resumen,p.enlace FROM usuario_proyecto up INNER JOIN proyecto p ON proyecto_id=p.id AND usuario_id=?";
+                PreparedStatement stmn=cnx.prepareStatement(qry);
+                stmn.setInt(1,u.getId());
+                ResultSet rs=stmn.executeQuery();
+                while (rs.next()) {
+                    lp.add(ProyectoDAO.recuperaProyecto(rs));
+                }
+                rs.close(); //Liberar recursos!
+                stmn.close();
+                closeConexion();
+            } catch (Exception ex) {
+                Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        }
+        return lp;
+    }
+    static void setProyectos(Usuario u, ArrayList<Integer> lp) {
+        if (openConexion()!=null) {
+            try {
+                String qry="DELETE FROM usuario_proyecto WHERE usuario_id=?";
+                PreparedStatement stmn=cnx.prepareStatement(qry);
+                stmn.setInt(1,u.getId());
+                stmn.executeUpdate();
+                stmn.close();
+                qry="INSERT INTO usuario_proyecto (usuario_id,proyecto_id) VALUES (?,?)";
+                stmn=cnx.prepareStatement(qry);
+                for(Integer i: lp) {
+                    stmn.setInt(1,u.getId());
+                    stmn.setInt(2,i);
+                    stmn.executeUpdate();
+                }
+                stmn.close();
+                closeConexion();
+            } catch (Exception ex) {
+                Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        }
+    }
 }

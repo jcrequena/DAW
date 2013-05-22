@@ -8,6 +8,14 @@
         <servlet-name>ProyectoControlador</servlet-name>
         <url-pattern>/proyecto/*</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UsuarioControlador</servlet-name>
+        <servlet-class>DAW.UsuarioControlador</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsuarioControlador</servlet-name>
+        <url-pattern>/usuario/*</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

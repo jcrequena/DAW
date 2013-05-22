@@ -8,6 +8,7 @@
 <%
     String relativePath=request.getParameter("rp");
 %>
+</div>
       <hr>
 
       <footer>

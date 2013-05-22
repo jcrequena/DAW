@@ -23,8 +23,26 @@ public class Usuario {
     private String cv;
     private String roles;
 
+    Usuario() {
+    }
+
+    public Usuario(int id, String email, String password, String nombre, String apellido, String carrera, String cv, String roles) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.carrera = carrera;
+        this.cv = cv;
+        this.roles = roles;
+    }
+
     public int getId() {
         return id;
+    }
+
+    void setId(int id) {
+        this.id=id;
     }
 
     public String getEmail() {
@@ -56,7 +74,7 @@ public class Usuario {
     }
 
     public void setApellido(String apellido) {
-        this.apellido = encryptPassword(apellido);
+        this.apellido = apellido;
     }
 
     public String getCarrera() {
@@ -82,37 +100,12 @@ public class Usuario {
     public void setRoles(String roles) {
         this.roles = roles;
     }
-    
-    private static String encryptPassword(String password)
-    {
-        String sha1 = "";
-        try
-        {
-            MessageDigest crypt = MessageDigest.getInstance("SHA-1");
-            crypt.reset();
-            crypt.update(password.getBytes("UTF-8"));
-            sha1 = byteToHex(crypt.digest());
-        }
-        catch(NoSuchAlgorithmException e)
-        {
-            e.printStackTrace();
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-        }
-        return sha1;
+
+    public boolean isAdmin() {
+        return this.roles.equals("admin");
     }
 
-    private static String byteToHex(final byte[] hash)
-    {
-        Formatter formatter = new Formatter();
-        for (byte b : hash)
-        {
-            formatter.format("%02x", b);
-        }
-        String result = formatter.toString();
-        formatter.close();
-        return result;
+    public boolean isConnected() {
+        return this.id!=0;
     }
 }

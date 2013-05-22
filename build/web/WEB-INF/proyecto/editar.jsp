@@ -5,7 +5,11 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="DAW.Usuario"%>
 <jsp:useBean id="proyecto" type="DAW.Proyecto" scope="request"/>
+<%
+    Usuario currentUsuario=(Usuario)request.getAttribute("currentUsuario");
+%>
 <jsp:include page="../header.jsp?rp=../" />
 <h1>Editar Proyecto</h1>
 <form method="post">

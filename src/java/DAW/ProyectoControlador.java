@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -36,6 +37,9 @@ public class ProyectoControlador extends HttpServlet {
         RequestDispatcher rd;
         
         request.setAttribute("srvUrl", srvUrl); // url servlet /daw/proyecto
+
+
+        Usuario currentUsuario = UsuarioControlador.getCurrentUsuario(request);
         
         if (action.equals("/ver")) {
             int id=Integer.parseInt(request.getParameter("id"));
@@ -44,44 +48,58 @@ public class ProyectoControlador extends HttpServlet {
             rd=request.getRequestDispatcher("/WEB-INF/proyecto/ver.jsp");
         }
         else if (action.equals("/suprimir")) {
-            int id=Integer.parseInt(Util.getParam(request.getParameter("id"),"0"));
-            if (id>0)
-                ProyectoDAO.suprimir(id);
-            response.sendRedirect(srvUrl); // redirección del navegador!
+            if(currentUsuario.isAdmin()) {
+                int id=Integer.parseInt(Util.getParam(request.getParameter("id"),"0"));
+                if (id>0)
+                    ProyectoDAO.suprimir(id);
+            }
+            response.sendRedirect(srvUrl);
             return;
         }
         else if (action.equals("/crear")) {
-            Proyecto p=new Proyecto(); // creamos el bean inicial
-            if (request.getParameter("enviar")!=null) { //¿POST formulario?
-                if (validarProyecto(request,p)) { // validar y "cargar" bean con parámetros
-                    //Crear Proyecto en modelo
-                    ProyectoDAO.crear(p);
-                    response.sendRedirect(srvUrl); // Volver al listado de proyectos
-                    return;
+            if(currentUsuario.isAdmin()) {
+                Proyecto p=new Proyecto(); // creamos el bean inicial
+                if (request.getParameter("enviar")!=null) { //¿POST formulario?
+                    if (validarProyecto(request,p)) { // validar y "cargar" bean con parámetros
+                        //Crear Proyecto en modelo
+                        ProyectoDAO.crear(p);
+                        response.sendRedirect(srvUrl); // Volver al listado de proyectos
+                        return;
+                    }
                 }
-            }
-            // Formulario de nuevo proyecto
-            request.setAttribute("proyecto", p); //bean vacío o con info erronea
-            rd=request.getRequestDispatcher("/WEB-INF/proyecto/crear.jsp");
-        }
-        else if (action.equals("/editar")) {
-            Proyecto p;
-            if (request.getParameter("enviar")!=null) { //¿POST formulario?
-                p=new Proyecto();
-                if (validarProyecto(request,p)) { // validar y "cargar" bean con parámetros
-                    ProyectoDAO.guardar(p); // Guardar cambios en modelo
-                    response.sendRedirect(srvUrl); // Volver al listado de proyectos
-                    return;
-                }
+                // Formulario de nuevo proyecto
+                request.setAttribute("proyecto", p); //bean vacío o con info erronea
+                rd=request.getRequestDispatcher("/WEB-INF/proyecto/crear.jsp");
             }
             else {
-                //Cargar Proyecto seleccionado
-                int id=Integer.parseInt(Util.getParam(request.getParameter("id"),"0"));
-                p=ProyectoDAO.buscarId(id);
+                response.sendRedirect(srvUrl);
+                return;
             }
-            //Formulario de edición
-            request.setAttribute("proyecto", p);
-            rd=request.getRequestDispatcher("/WEB-INF/proyecto/editar.jsp");
+        }
+        else if (action.equals("/editar")) {
+            if(currentUsuario.isConnected()) {
+                Proyecto p;
+                if (request.getParameter("enviar")!=null) { //¿POST formulario?
+                    p=new Proyecto();
+                    if (validarProyecto(request,p)) { // validar y "cargar" bean con parámetros
+                        ProyectoDAO.guardar(p); // Guardar cambios en modelo
+                        response.sendRedirect(srvUrl); // Volver al listado de proyectos
+                        return;
+                    }
+                }
+                else {
+                    //Cargar Proyecto seleccionado
+                    int id=Integer.parseInt(Util.getParam(request.getParameter("id"),"0"));
+                    p=ProyectoDAO.buscarId(id);
+                }
+                //Formulario de edición
+                request.setAttribute("proyecto", p);
+                rd=request.getRequestDispatcher("/WEB-INF/proyecto/editar.jsp");
+            }
+            else {
+                response.sendRedirect(srvUrl);
+                return;
+            }
         }
         else { //Listar proyectos 
             List<Proyecto> lp = ProyectoDAO.buscarTodos();
